@@ -1,0 +1,4 @@
+---
+
+openvpn_client_config_path: "/etc/default/openvpn"
+openvpn_client_config_dir: "/etc/openvpn"

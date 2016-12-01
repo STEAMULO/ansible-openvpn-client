@@ -1,0 +1,26 @@
+---
+
+- name: Install openvpn
+  apt:
+    name: openvpn
+    update_cache: yes
+
+- name: Create openvpn config file
+  copy:
+    content: "{{ openvpn_client_config_ovpn }}"
+    dest: "{{ openvpn_client_config_dir }}/{{ openvpn_client_config_name }}.conf"
+  notify: "restart openvpn"
+
+- name: Create openvpn additional config files
+  copy:
+    content: "{{ item.content }}"
+    dest: "{{ openvpn_client_config_dir }}/{{ item.name }}"
+  with_items: "{{ openvpn_client_config_additional_files }}"
+  notify: "restart openvpn"
+
+- name: Add autostart for openvpn client
+  lineinfile:
+    insertafter: "#AUTOSTART" # let the comment, as its explain how this file works
+    line: 'AUTOSTART="{{ openvpn_client_config_name }}"'
+    dest: "{{ openvpn_client_config_path }}"
+  notify: "restart openvpn"
